@@ -1,0 +1,6 @@
+virtualmachines:
+  hosts:
+    test-vm-2:
+      ansible_host: 192.168.1.71
+    test-vm-1:
+      ansible_host: 192.168.1.72
