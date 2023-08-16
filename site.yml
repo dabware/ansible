@@ -1,0 +1,61 @@
+---
+
+- hosts: all
+  become: true
+  pre_tasks:
+  
+  - name: Install updates OracleLinux
+    dnf:
+      update_only: yes
+      update_cache: yes
+    when: ansible_distribution == "OracleLinux"
+
+  - name: Install updates Ubuntu
+    apt:
+      upgrade: dist
+      update_cache: yes
+    when: ansible_distribution == "Ubuntu"
+
+
+- hosts: web_servers
+  become: true
+  tasks:
+
+  - name: install apache and PHP package on Ubuntu
+    package: 
+      name: 
+        - apache2
+        - libapache2-mod-php
+      state: latest
+      update_cache: yes
+    when: ansible_distribution == "Ubuntu"
+
+  - name: install apache and PHP package on OracleLinux
+    package: 
+      name: 
+        - httpd
+        - php
+      state: latest
+      update_cache: yes
+    when: ansible_distribution == "OracleLinux"
+
+
+- hosts: db_servers
+  become: true
+  tasks:
+
+  - name: Install mariadb package oraclelinux
+    dnf:
+      name: mariadb
+      state: latest
+    when: ansible_distribution == "OracleLinux"
+
+- hosts: file_servers
+  become: true
+  tasks:
+
+  - name: install samba package
+    package:
+      name: samba
+      state: latest
+
