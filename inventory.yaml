@@ -1,11 +1,6 @@
 #Denzil
-virtualmachines:
-  hosts:
-    test-vm-2:
-      ansible_host: 192.168.1.71
-    test-vm-1:
-      ansible_host: 192.168.1.72
-    Oracle-test1:
-      ansible_host: 192.168.1.141
+192.168.1.71 apache_package=apache2 php_package=libapache2-mod-php
+192.168.1.72 apache_package=apache2 php_package=libapache2-mod-php
+192.168.1.141 apache_package=httpd php_package=php
 
 

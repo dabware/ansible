@@ -4,38 +4,14 @@
   become: true
   tasks:
 
-  - name: update repo index
-    apt:
+  - name: install apache and PHP package
+    package: 
+      name: 
+        - "{{ apache_package}}"
+        - "{{ php_package }}"
+      state: absent
       update_cache: yes
-    when: ansible_distribution == "Ubuntu"
-
-  - name: install apache2 package
-    apt: 
-      name: apache2
-      state: absent
-    when: ansible_distribution == "Ubuntu"
 
 
-  - name: add php support for apache2
-    apt: 
-      name: libapache2-mod-php
-      state: absent
-    when: ansible_distribution == "Ubuntu"
-
-  - name: update repo index
-    dnf:
-      update_cache: yes
-    when: ansible_distribution == "OracleLinux"
-
-  - name: install apache2 package
-    dnf: 
-      name: apache2
-      state: absent
-    when: ansible_distribution == "OracleLinux"
 
 
-  - name: add php support for apache2
-    dnf: 
-      name: libapache2-mod-php
-      state: absent
-    when: ansible_distribution == "OracleLinux"
