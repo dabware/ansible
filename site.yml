@@ -43,6 +43,14 @@
       update_cache: yes
     when: ansible_distribution == "OracleLinux"
 
+  - name: copy default html file for the site
+    tags: apache,apache2,httpd
+    copy:
+      src: default-site.html
+      dest: /var/www/html/index.html
+      owner: root
+      group: root
+      mode: 0644
 
 - hosts: db_servers
   become: true
@@ -64,4 +72,3 @@
     package:
       name: samba
       state: latest
-
