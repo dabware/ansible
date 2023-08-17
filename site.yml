@@ -7,40 +7,16 @@
   - name: Install updates OracleLinux
     tags: always
     dnf:
-      update_only: yes
       update_cache: yes
+    changed_when: false
     when: ansible_distribution == "OracleLinux"
 
   - name: Install updates Ubuntu
     tags: always
     apt:
-      upgrade: dist
       update_cache: yes
+    changed_when: false
     when: ansible_distribution == "Ubuntu"
-
-- hosts: all
-  become: true
-  tasks:
-
-  - name: create simone user
-    tags: always
-    ansible.builtin.user:
-        name: simone
-        groups: root
-
-  - name: add ssh key for simone
-    ansible.posix.authorized_key:
-      user: simone
-      key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
-
-  - name: add sudoers file for simone
-    tags: always
-    ansible.builtin.copy:
-      src: sudoer_simone
-      dest: /etc/sudoers.d/simone
-      owner: root
-      group: root
-      mode: 288
 
 - hosts: web_servers
   become: true
