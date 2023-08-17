@@ -18,6 +18,29 @@
       update_cache: yes
     when: ansible_distribution == "Ubuntu"
 
+- hosts: all
+  become: true
+  tasks:
+
+  - name: create simone user
+    tags: always
+    ansible.builtin.user:
+        name: simone
+        groups: root
+
+  - name: add ssh key for simone
+    ansible.posix.authorized_key:
+      user: simone
+      key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+
+  - name: add sudoers file for simone
+    tags: always
+    ansible.builtin.copy:
+      src: sudoer_simone
+      dest: /etc/sudoers.d/simone
+      owner: root
+      group: root
+      mode: 288
 
 - hosts: web_servers
   become: true
@@ -132,3 +155,4 @@
        mode: 0755
        owner: root
        group: root
+   
