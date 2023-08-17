@@ -61,6 +61,23 @@
       enabled: true
     when: ansible_distribution == "Rocky"
 
+  - name: change email address for httpd serveradmin
+    tags: apache,oraclelinux,httpd
+    ansible.builtin.lineinfile:
+      path: /etc/httpd/conf/httpd.conf
+      regexp: '^ServerAdmin'
+      line: ServerAdmin somebody@somewhere.net
+    when: ansible_distribution == "Rocky"
+    register: httpd
+
+  - name: restart httpd
+    tags: apache,rocky,httpd
+    ansible.builtin.service:
+      name: httpd
+      state: restarted
+      enabled: true
+    when: httpd.changed
+
   - name: copy default html file for the site
     tags: apache,apache2,httpd
     copy:
