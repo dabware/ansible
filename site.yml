@@ -43,6 +43,24 @@
       update_cache: yes
     when: ansible_distribution == "OracleLinux"
 
+  - name: install apache and PHP package on Rocky
+    tags: apache,oracleserver,httpd
+    package: 
+      name: 
+        - httpd
+        - php
+      state: latest
+      update_cache: yes
+    when: ansible_distribution == "Rocky"
+ 
+  - name: start httpd
+    tags: apache,httpd,oraclelinux
+    ansible.builtin.service:
+      name: httpd
+      state: started
+      enabled: true
+    when: ansible_distribution == "Rocky"
+
   - name: copy default html file for the site
     tags: apache,apache2,httpd
     copy:
@@ -51,7 +69,15 @@
       owner: root
       group: root
       mode: 0644
-
+  
+  - name: open firewall-cmd port for httpd
+    ansible.posix.firewalld:
+      service: http
+      permanent: true
+      state: enabled
+      immediate: true
+    when: ansible_distribution == "Rocky"
+    
 - hosts: db_servers
   become: true
   tasks:
