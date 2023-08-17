@@ -1,0 +1,71 @@
+- name: install apache and PHP package on Ubuntu
+  tags: apache,apache2,ubuntu
+  package: 
+    name: 
+      - apache2
+      - libapache2-mod-php
+    state: latest
+    update_cache: yes
+  when: ansible_distribution == "Ubuntu"
+
+- name: install apache and PHP package on OracleLinux
+  tags: apache,oracleserver,httpd
+  package: 
+    name: 
+      - httpd
+      - php
+    state: latest
+    update_cache: yes
+  when: ansible_distribution == "OracleLinux"
+
+- name: install apache and PHP package on Rocky
+  tags: apache,oracleserver,httpd
+  package: 
+    name: 
+      - httpd
+      - php
+    state: latest
+    update_cache: yes
+  when: ansible_distribution == "Rocky"
+
+- name: start httpd
+  tags: apache,httpd,oraclelinux
+  ansible.builtin.service:
+    name: httpd
+    state: started
+    enabled: true
+  when: ansible_distribution == "Rocky"
+
+- name: change email address for httpd serveradmin
+  tags: apache,oraclelinux,httpd
+  ansible.builtin.lineinfile:
+    path: /etc/httpd/conf/httpd.conf
+    regexp: '^ServerAdmin'
+    line: ServerAdmin somebody@somewhere.net
+  when: ansible_distribution == "Rocky"
+  register: httpd
+
+- name: restart httpd
+  tags: apache,rocky,httpd
+  ansible.builtin.service:
+    name: httpd
+    state: restarted
+    enabled: true
+  when: httpd.changed
+
+- name: copy default html file for the site
+  tags: apache,apache2,httpd
+  copy:
+    src: default-site.html
+    dest: /var/www/html/index.html
+    owner: root
+    group: root
+    mode: 0644
+
+- name: open firewall-cmd port for httpd
+  ansible.posix.firewalld:
+    service: http
+    permanent: true
+    state: enabled
+    immediate: true
+  when: ansible_distribution == "Rocky"

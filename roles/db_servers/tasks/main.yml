@@ -1,0 +1,6 @@
+- name: Install mariadb package oraclelinux
+  tags: oraclelinux,db,mariadb
+  dnf:
+    name: mariadb
+    state: latest
+  when: ansible_distribution == "OracleLinux"
